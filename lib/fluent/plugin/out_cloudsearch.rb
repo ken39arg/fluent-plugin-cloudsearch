@@ -15,6 +15,8 @@ module Fluent
     # message packをJSONにした時に5MBを超えないように
     MAX_SIZE_LIMIT = 4.5*1024*1024
 
+    config_set_default :buffer_chunk_limit, MAX_SIZE_LIMIT
+
     def initialize
       super
 
@@ -22,10 +24,11 @@ module Fluent
     end
 
     def configure(conf)
+
       super
 
-      if not @buffer_chunk_limit or @buffer_chunk_limit > MAX_SIZE_LIMIT
-        @buffer_chunk_limit = MAX_SIZE_LIMIT
+      if @buffer.buffer_chunk_limit > MAX_SIZE_LIMIT
+        @buffer.buffer_chunk_limit = MAX_SIZE_LIMIT
       end
 
       @formatter = Plugin.new_formatter('json')
