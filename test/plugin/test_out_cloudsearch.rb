@@ -110,9 +110,9 @@ class CloudSearchOutputTest < Test::Unit::TestCase
     d.emit({'id' => 'x5234', 'type' => 'add', 'fields' => {'foo' => 3, 'bar' => 'b'}})
     d.emit({'id' => 'x3234'}) # ignore because type is not exists
 
-    d.expect_format %[{"id":"x1234","type":"add","fields":{"foo":1,"bar":"a"}}\n]
-    d.expect_format %[{"id":"y2234","type":"delete"}\n]
-    d.expect_format %[{"id":"x5234","type":"add","fields":{"foo":3,"bar":"b"}}\n]
+    d.expect_format %[{"id":"x1234","type":"add","fields":{"foo":1,"bar":"a"}},]
+    d.expect_format %[{"id":"y2234","type":"delete"},]
+    d.expect_format %[{"id":"x5234","type":"add","fields":{"foo":3,"bar":"b"}},]
 
     d.run
 
