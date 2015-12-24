@@ -13,9 +13,7 @@ module Fluent
     config_param :profile_name, :string, :default => nil
 
     # message packをJSONにした時に5MBを超えないように
-    MAX_SIZE_LIMIT = 4.5*1024*1024
-
-    config_set_default :buffer_chunk_limit, MAX_SIZE_LIMIT
+    MAX_SIZE_LIMIT = 4.5 * 1024 * 1024
 
     def initialize
       super
@@ -25,10 +23,13 @@ module Fluent
 
     def configure(conf)
 
+      # override config. (config_set_default can't override it)
+      conf['buffer_chunk_limit'] ||= MAX_SIZE_LIMIT
+
       super
 
       if @buffer.buffer_chunk_limit > MAX_SIZE_LIMIT
-        @buffer.buffer_chunk_limit = MAX_SIZE_LIMIT
+        raise ConfigError, "buffer_chunk_limit must be less than #{MAX_SIZE_LIMIT}"
       end
 
       @formatter = Plugin.new_formatter('json')
