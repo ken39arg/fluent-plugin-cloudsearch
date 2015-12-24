@@ -1,8 +1,8 @@
 # Fluent::Plugin::Cloudsearch
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/fluent/plugin/cloudsearch`. To experiment with that code, run `bin/console` for an interactive prompt.
+Send yourr logs to cloudsearch.
 
-TODO: Delete this and the text above, and describe your gem
+https://aws.amazon.com/jp/cloudsearch/
 
 ## Installation
 
@@ -22,7 +22,23 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```
+<match my.logs>
+  type cloudsearch 
+  endpoint http://my-cloudsearch-document-endpoint.example.com
+  region   us-east
+
+  # access_key & secret_access_key
+  access_key_id MYACCESSKEY
+  secret_access_key MYSECRETKEY
+
+  # for shared credentials
+  profile_name MYPROFILENAME
+
+  # maximum and default buffer_chunk_limit is 4.5MB
+  buffer_chunk_limit 4.5M
+</match>
+```
 
 ## Development
 
@@ -32,7 +48,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/fluent-plugin-cloudsearch. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/ken39arg/fluent-plugin-cloudsearch. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 
 ## License
