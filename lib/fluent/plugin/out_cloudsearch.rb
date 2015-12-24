@@ -19,6 +19,7 @@ module Fluent
       super
 
       require 'aws-sdk'
+      require 'json'
     end
 
     def configure(conf)
@@ -31,8 +32,6 @@ module Fluent
       if @buffer.buffer_chunk_limit > MAX_SIZE_LIMIT
         raise ConfigError, "buffer_chunk_limit must be less than #{MAX_SIZE_LIMIT}"
       end
-
-      @formatter = Plugin.new_formatter('json')
     end
 
     def start
@@ -49,7 +48,23 @@ module Fluent
     end
 
     def format(tag, time, record)
-      @formatter.format_record(record)
+      if !record.key?('id') then
+        log.warn "id is required #{record.to_s}"
+        return ''
+      elsif !record.key?('type') then
+        log.warn "type is required #{record.to_s}"
+        return ''
+      elsif record['type'] == 'add' then
+        if !record.key?('fields') then
+            log.warn "fields is required when type is add. #{record.to_s}"
+            return ''
+        end
+      elsif record['type'] != 'delete' then
+        log.warn "type is add or delete #{record.to_s}"
+        return ''
+      end
+
+      "#{record.to_json}\n"
     end
 
     def write(chunk)
