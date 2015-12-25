@@ -64,12 +64,12 @@ module Fluent
         return ''
       end
 
-      "#{record.to_json}\n"
+      "#{record.to_json},"
     end
 
     def write(chunk)
       documents = '['
-      documents << chunk.read.split("\n").join(",")
+      documents << chunk.read.chop  # chop last ','
       documents << ']'
       resp = @client.upload_documents(
         :documents => documents,
