@@ -38,6 +38,12 @@ class CloudSearchOutputTest < Test::Unit::TestCase
       ]
     }
 
+    assert_raise(Fluent::ConfigError) {
+      d = create_driver %[
+        buffer_chunk_limit 1M
+      ]
+    }
+
     d = create_driver %[
       endpoint http://example.com
       profile_name foo-doc

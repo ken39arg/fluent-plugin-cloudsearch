@@ -29,6 +29,9 @@ module Fluent
 
       super
 
+      unless @endpoint
+        raise ConfigError, "'endpoint' parameter is required"
+      end
       if @buffer.buffer_chunk_limit > MAX_SIZE_LIMIT
         raise ConfigError, "buffer_chunk_limit must be less than #{MAX_SIZE_LIMIT}"
       end
@@ -37,7 +40,7 @@ module Fluent
     def start
       super
       options = setup_credentials
-      options[:endpoint] = @endpoint if @endpoint
+      options[:endpoint] = @endpoint
       options[:region] = @region if @region
       @client = Aws::CloudSearchDomain::Client.new(options)
     end
