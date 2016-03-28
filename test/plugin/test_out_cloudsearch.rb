@@ -115,10 +115,12 @@ class CloudSearchOutputTest < Test::Unit::TestCase
     d.emit({'id' => 'x4234', 'type' => 'add'}) # ignore because fields is not exits
     d.emit({'id' => 'x5234', 'type' => 'add', 'fields' => {'foo' => 3, 'bar' => 'b'}})
     d.emit({'id' => 'x3234'}) # ignore because type is not exists
+    d.emit({'id' => 'x6789', 'type' => 'add', 'fields' => {'foo' => 1, 'bar' => "foo\u0014bar"}})
 
     d.expect_format %[{"id":"x1234","type":"add","fields":{"foo":1,"bar":"a"}},]
     d.expect_format %[{"id":"y2234","type":"delete"},]
     d.expect_format %[{"id":"x5234","type":"add","fields":{"foo":3,"bar":"b"}},]
+    d.expect_format %[{"id":"x6789","type":"add","fields":{"foo":1,"bar":"foo bar"}},]
 
     d.run
 
