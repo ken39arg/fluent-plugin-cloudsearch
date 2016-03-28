@@ -15,6 +15,9 @@ module Fluent
     # message packをJSONにした時に5MBを超えないように
     MAX_SIZE_LIMIT = 4.5 * 1024 * 1024
 
+    # https://docs.aws.amazon.com/en_us/cloudsearch/latest/developerguide/preparing-data.html
+    INVALID_CHAR_REGEX = /[^\u0009\u000a\u000d\u0020-\uD7FF\uE000-\uFFFD]/
+
     def initialize
       super
 
@@ -67,7 +70,20 @@ module Fluent
         return ''
       end
 
-      "#{record.to_json},"
+      r = record.dup
+      f = r['fields']
+      if f.kind_of? Hash
+        # replace invalid char to white space
+        f.each do |key, value|
+          if value.kind_of? String
+            f[key] = value.gsub(INVALID_CHAR_REGEX, ' ')
+          else
+            f[key] = value
+          end
+        end
+      end
+
+      return "#{r.to_json},"
     end
 
     def write(chunk)
